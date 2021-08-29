@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<meta charset="ISO-8859-1">
+<html>
+<head>
+  <title>An Empirical Study of Bad Smells in Component-based SPLs</title>
+  <link rel="stylesheet" type="text/css" href="css/styles.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('body').scrollspy({
+        target : '#mainNavBar'
+      })
+    });
+  </script>
+
+</head>
+<body>
+
+<nav id="mainNavBar" class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed"
+              data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+              aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span> <span
+              class="icon-bar"></span> <span class="icon-bar"></span> <span
+              class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">SBCARS 2021</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse"
+         id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#abstract">Abstract <span
+                class="sr-only">(current)</span></a></li>
+
+        <li><a href="#detectionstrategy">Detection Strategy</a></li>
+        <li><a href="#thresholds">Metric Distribution</a></li>
+        <li><a href="#smells">Code Smells and Violated Component
+          Principles</a></li>
+        <li><a href="#downloads">Downloads</a></li>
+        <li><a href="#authors">Authors</a></li>
+        <li><a href="#references">References</a></li>
+
+      </ul>
+
+    </div>
+    <!-- /.navbar-collapse -->
+  </div>
+  <!-- /.container-fluid -->
+</nav>
+
+
+<div class="container container-gral">
+
+  <div class="page-title">
+    <h1>
+      Do Critical Components Smell Bad? An Empirical Study with Component-based Software Product Lines
+    </h1>
+  </div>
+  <br>
+  <p class="text-justify">This website contains complementary data
+    to the <!--submitted--> paper.</p>
+
+  <h3 id="abstract" class="page-header">Abstract</h3>
+  <p class="text-justify">Component-based software product line (SPL) consists of a set of software products that share common components. For a proper SPL product composition, each component has to follow three principles: encapsulates a single feature; restricts data access; and be replaceable. However, it is known that developers usually introduce anomalous structures, i.e. code smells, along the implementation of components. These code smells might violate one or more component principles and hinder the SPL product composition. Thus, developers should identify code smells in component-based SPLs, especially those affecting highly coupled components, which are called critical components. Nevertheless, there is limited evidence of how smelly are these critical components in component-based SPLs. To address this limitation, this paper presents a survey with developers of three SPLs. We inquired these developers about their perceptions of a critical component. Then, we characterize critical components per SPL, and identify nine recurring types of code smells. Finally, we quantitatively assess the smelliness of the critical components. Our results suggest that: critical components are ten times more prone to have code smells than non-critical ones; the most frequent code smell types affecting critical components violate several component principles together; and these smell types affect the maintainability of multiple SPL components.</p>
+
+
+  <h3 id="detectionstrategy" class="page-header">Detection Strategy</h3>
+  <p class="text-justify">
+    Coupling measures how much a SPL component provides features to other
+    components, or depends on features provided by other components. That
+    is, coupling metrics aim at capturing to what extent each SPL
+    components is attached to the whole SPL. Thus, a high coupling for a
+    given SPL component is strongly attached to others. This attachment,
+    might indicate violations of the component principles, which are:
+    feature encapsulation <a href="#references">[6]</a>; data access
+    restriction <a href="#references">[5]</a>; and replaceability <a
+          href="#references">[4]</a>. It might also suggest that the component
+    realizes an essential feature to the SPL product configuration, due
+    to the high number of dependencies with other components. On the
+    other hand, a low coupling suggests that the SPL component is weakly
+    coupled to others, which might indicate that those three component
+    principles are properly followed by the component. It might also
+    suggest that the component realizes a feature that is not essential
+    to the SPL product configuration, due to the low number of
+    dependencies among components. In order to detect critical components
+    in component-based SPLs, we have applied a coupling metric-based
+    strategy proposed in the literature <a href="#references">[7]</a>.
+    This metric-based strategy combines multiples metrics to detect
+    components that satisfy a property, the component criticality in our
+    case.
+  </p>
+
+
+  <p class="text-justify">Table 1 presents the coupling metrics used
+    by the selected strategy. The first column names each metric. The
+    second column describes the metric.</p>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Table 1: Metrics combined by the
+        selected strategy to detect critical components</h3>
+    </div>
+    <table class="table table-striped">
+
+
+      <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Description</th>
+
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <th scope="row">Coupling Between Objects (CBO) <a
+                href="#references">[1]</a></th>
+        <td>Number of components coupled to one specific component.</td>
+
+      </tr>
+      <tr>
+        <th scope="row">Fan-in (FANIN) <a href="#references">[2]</a></th>
+        <td>Number of dependencies from other components to a
+          specific component.</td>
+
+      </tr>
+      <tr>
+        <th scope="row">Fan-out (FANOUT) <a href="#references">[2]</a></th>
+        <td>Number of dependencies from one component to others.</td>
+
+      </tr>
+      <th scope="row">Depth of Inheritance Tree (DIT) <a
+              href="#references">[1]</a></th>
+      <td>Maximum depth of a component in the inheritance tree.</td>
+
+      </tr>
+      <tr>
+        <th scope="row">Number Of Children (NOC) <a
+                href="#references">[1]</a></th>
+        <td>Number of children components of a given component.</td>
+
+      </tr>
+
+
+      </tbody>
+    </table>
+
+  </div>
+
+
+
+
+  <p class="text-justify">Figure 1 presents the metric-based
+    strategy selected for detecting critical components. We assume that
+    both FANIN and CBO explicitly capture coupling between critical
+    components. Based on the literature of component-based SPL, a
+    critical component is the one that has too many dependencies with
+    other components, which we can measure through CBO > Threshold and
+    FANIN > Threshold. However, from our viewpoint, FANOUT > Threshold
+    may not suffice to detect critical components. That is because,
+    considering the SPL architecture, each component tends to use
+    features provided by several other components. However, when a
+    component is deeply located in the inheritance tree and has too many
+    children components, such external dependencies indicated by FANOUT >
+    Threshold may negatively impact on the SPL product configuration,
+    which makes the component to become critical. Thus, FANOUT has to be
+    combined with DIT > Threshold and NOC > Threshold for capturing
+    critical components.</p>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Figure 1: Metric-based strategy for
+            detecting critical components</h3>
+        </div>
+        <div class="panel-body" style="text-align: center;">
+          <input type="image" src="download/DetectionStrategy.png"
+                 width="850" height="367">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <h3 id="thresholds" class="page-header">Metric Distribution</h3>
+  <p class="text-justify">
+    We analyzed the distribution of each metric to select a threshold
+    derivation method that best fits our metric distributions. Figure 2
+    shows that the five metrics follow a heavy-tailed distribution <a
+          href="#references">[3]</a>, in which the higher the metric value,
+    the more critical is the metric.
+  </p>
+
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Figure 2: Distribution of Frequency
+            per Software Metric</h3>
+        </div>
+        <div class="panel-body" style="text-align: center;">
+          <input type="image" src="download/vioplots.png" width="850"
+                 height="367">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-justify">
+
+    To derive thresholds that characterize critical metric values and,
+    therefore, to determine threshold of each metrics, we used a
+    quantile-based method from the literature <a href="#references">[2]</a>.
+    It defines five value intervals, including high (values > 90%) and
+    very high (values > 95%). We call <em>Critical</em> the interval
+    [90%, 95%], which has the critical SPL component, and <em>Strongly
+    Critical</em> the interval [95%, 100%], which has the most critical
+    components. Table 2 presents the thresholds derived from the three
+    SPLs selected for conducting our study. The first column groups the
+    software metrics per level at the source code, namely method and
+    component. The second column lists the metrics. The remaining columns
+    present the four computed thresholds: 3%, 15%, 90%, and 95%. In our
+    study, we have adopted Threshold = 95% for all metrics to compute
+    strongly critical components, and Threshold = 90% for all metrics to
+    compute critical components.
+
+  </p>
+
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Table 2: Metric thresholds derived from
+        the three selected SPLs.</h3>
+    </div>
+
+
+
+    <table class="table table-striped">
+      <thead>
+
+      <tr>
+        <th>Metric Level</th>
+        <th>Software Metric</th>
+        <th>3%</th>
+        <th>15%</th>
+        <th>90%</th>
+        <th>95%</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td rowspan="2">Method</td>
+        <td>FANOUT</td>
+        <td>0</td>
+        <td>1</td>
+        <td>34</td>
+        <td>46.85</td>
+      </tr>
+      <tr>
+        <td>FANIN</td>
+        <td>0</td>
+        <td>2</td>
+        <td>30</td>
+        <td>40</td>
+      </tr>
+      <tr>
+        <td rowspan="3">Component</td>
+        <td>CBO</td>
+        <td>0</td>
+        <td>0</td>
+        <td>6</td>
+        <td>8</td>
+      </tr>
+      <tr>
+        <td>NOC</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>DIT</td>
+        <td>0</td>
+        <td>0</td>
+        <td>3</td>
+        <td>3</td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <h3 id="smells" class="page-header">Code Smells and Violated
+    Component Principles</h3>
+
+  <p class="text-justify">
+    In this work, we assess to what extent the most frequent code smell
+    types affecting critical components might violate the three main
+    component principles: feature encapsulation <a href="#references">[6]</a>;
+    data access restriction <a href="#references">[5]</a>; and
+    replaceability <a href="#references">[4]</a>. Thus, based on the most
+    traditional literature about code smells <a href="#references">[8]</a>
+    <a href="#references">[9]</a> <a href="#references">[10]</a> <a
+          href="#references">[11]</a>, we have elicited the component
+    principles that each of the nine code smell types assessed by our
+    work might violate. Consider the following enumeration of these
+    principles: (I) feature encapsulation; (II) data access restriction;
+    and (III) replaceability.
+  </p>
+
+  <p class="text-justify">
+    <b>Data Class violates:</b>
+  <ul>
+    <li>(I) since the smelly component implements data persistence
+      that concerns other components. Both attributes and methods that
+      implement data persistence for a specific component should be moved
+      from the Data Class instance to that specific component. This
+      operation could improve the feature encapsulation and solve the
+      previous violation.</li>
+  </ul>
+
+  <p class="text-justify">
+    <b>Dispersed Coupling violates:</b>
+  <ul>
+    <li>(I) since the smelly component implements features that
+      concern multiple components scattered throughout the system. Thus,
+      these features should be better encapsulated into their respective
+      components.</li>
+  </ul>
+
+  <p class="text-justify">
+    <b>Feature Envy violates:</b>
+  <ul>
+    <li>(I) since the smelly component has features that partially
+      address concerns located into other components. It suggests a poor
+      feature encapsulation, which could be solved by moving the "envy"
+      features from the smelly component to the most appropriate
+      component.</li>
+    <li>(II) since the smelly component requires accessing the data
+      provided by another component. Such access has been allowed by a
+      violation of the component interface, which implies a violation of
+      the data access restriction principle.</li>
+  </ul>
+
+  <p class="text-justify">
+    <b>Intensive Coupling violates:</b>
+  <ul>
+    <li>(I) due to similar reasons when compared with Dispersed
+      Coupling. The difference relies on the fact that the smelly
+      component depends on a very limited set of external components,
+      though such dependency is excessive. It implies a violation of the
+      feature encapsulation principle.</li>
+  </ul>
+
+
+  <p class="text-justify">
+    <b>Large Class violates:</b>
+  <ul>
+    <li>(I) since the smelly component realizes too many features,
+      which should be distributed into multiple components instead of a
+      single component. It clearly violates the feature encapsulation
+      principle.</li>
+    <li>(III) since the smelly component could be very difficult to
+      replace with another one. That is, due to the high complexity of the
+      smelly component affected by a Large Class instance, it becomes
+      challenging to replace it with another component that manages all
+      features provided by the original, smelly component.</li>
+  </ul>
+
+
+  <p class="text-justify">
+    <b>Long Method violates: </b>
+  <ul>
+    <li>(I) since too large and complex might be realizing features
+      that should be encapsulated into other external components.</li>
+    <li>(III) since the smelly component possibly implements too
+      complex features, which require a wide knowledge of developers about
+      the method (and eventually about the whole program) to allow
+      replacing the smelly method by another one with similar purpose.</li>
+  </ul>
+
+  <p class="text-justify">
+    <b>Refused Bequest violates:</b>
+  <ul>
+    <li>(I) since the smelly element, refuses to either implement or
+      use the features provided by the parent component. It suggests a
+      need for remodularizing the involved components, in order to better
+      encapsulate the features that concern each component (i.e., parent
+      and children components).</li>
+  </ul>
+
+  <p class="text-justify">
+    <b>Shotgun Surgery violates:</b>
+  <ul>
+    <li>(I) since the smelly component has features that imply
+      changing several other components. This implication might be due to
+      a poor feature encapsulation, which reflects on the source code in
+      terms of unnecessary dependencies and method calls, for instance.</li>
+
+    <li>(III) since the smelly component possibly realizes too
+      complex features. That is, only a complex program logic could impact
+      on the implementation of multiple components together. It suggests
+      that the smelly component is difficult for developers to replace
+      with another component that realizes either similar or equivalent
+      features.</li>
+  </ul>
+
+  <p class="text-justify">
+    <b> Type Checking violates:</b>
+  <ul>
+    <li>(III) since the smelly component has a code structure that
+      might be very large and complex. That is, replacing the smelly
+      component with another one would require from developers a solid
+      knowledge about the type checking structure.</li>
+  </ul>
+
+
+
+
+
+
+
+
+
+  <h3 id="downloads" class="page-header">Downloads</h3>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>Artifact</th>
+      <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td><a href="download/ComponentList_BET-SPL.pdf"
+             target="_blank">Component List of BET-SPL </a></td>
+      <td>Reference list of critical components, list of critical
+        components, and list of strongly critical components.
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td><a href="download/ComponentList_NotePad.pdf"
+             target="_blank">Component List of NotePad</a></td>
+      <td>Reference list of critical components, list of critical
+        components, and list of strongly critical components.
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td><a href="download/ComponentList_MobileMedia.pdf"
+             target="_blank">Component List of MobileMedia</a></td>
+      <td>Reference list of critical components, list of critical
+        components, and list of strongly critical components.
+    </tr>
+    <tr>
+      <th scope="row">4</th>
+      <td><a href="download/NotePad_featureModel.png"
+             target="_blank">Feature Model of NotePad SPL</a></td>
+      <td>Full feature model of NotePad SPL.
+    </tr>
+
+    <tr>
+      <th scope="row">5</th>
+      <td><a href="download/Form_ParticipantCharacterization.pdf"
+             target="_blank">Participant Characterization Form</a></td>
+      <td>This file contains the participant characterization form.
+
+
+
+
+
+
+
+
+    </tr>
+    <tr>
+      <th scope="row">6</th>
+      <td><a href="download/Form_CriticalComponentElicitation.pdf"
+             target="_blank">Critical Component Elicitation Form</a></td>
+      <td>This file contains the critical component elicitation
+        form.
+    </tr>
+
+    </tbody>
+  </table>
+
+  <h3 class="page-header" id="authors">Authors</h3>
+
+  <p>Any questions and/or suggestions should be sent to the paper
+    authors as follows.</p>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>E-mail</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Author name</td>
+      <td>e-mail</td>
+    </tr>
+
+    </tbody>
+  </table>
+
+  <h3 id="references" class="page-header">References</h3>
+
+  <p class="text-justify">
+    <strong>[1]</strong> Chidamber, S. R., & Kemerer, C. F. (1994). <a
+          target="_blank"
+          href="http://ieeexplore.ieee.org/abstract/document/295895/">A
+    metrics suite for object oriented design.</a> IEEE Transactions on
+    Software Engineering (TSE), 20(6), 476-493.
+  </p>
+
+
+  <p class="text-justify">
+    <strong>[2]</strong> Henry, S., & Kafura, D. (1981). <a
+          target="_blank"
+          href="http://ieeexplore.ieee.org/abstract/document/1702877/">Software
+    structure metrics based on information flow.</a> IEEE Transactions on
+    Software Engineering (TSE), (5), 510-518.
+  </p>
+
+  <p class="text-justify">
+    <strong>[3]</strong> T. Filo, M. Bigonha, and K. Ferreira (2015). <a
+          target="_blank"
+          href="http://ieeexplore.ieee.org/abstract/document/1702877/">A
+    catalogue of thresholds for object-oriented software metrics.</a> 1st
+    International Conference on Advances and Trends in Software
+    Engineering (SOFTENG), p. 48–55, 2015.
+  </p>
+
+
+  <p class="text-justify">
+    <strong>[4]</strong> Crnkovic and M. Larsson. (2002). <a
+          target="_blank" href="https://dl.acm.org/citation.cfm?id=549265">Building
+    reliable component-based software systems.</a> Artech House.
+  </p>
+
+
+  <p class="text-justify">
+    <strong>[5]</strong> W. Frakes and K. Kang (2005). <a target="_blank"
+                                                          href="http://ieeexplore.ieee.org/document/1492369/">Software
+    reuse research.</a> 31th IEEE transactions on Software Engineering
+    (TSE), p. 529–536, 2005.
+  </p>
+
+  <p class="text-justify">
+    <strong>[6]</strong> C. Krueger (2006). <a target="_blank"
+                                               href="https://dl.acm.org/citation.cfm?doid=1183236.1183262">New
+    methods in software product line practice.</a> Communications of the
+    ACM, p. 37–40, 2006.
+  </p>
+
+
+  <p class="text-justify">
+    <strong>[7]</strong> A. Uchoa, E. Fernandes, A. C. Bibiano, and A.
+    Garcia (2017). <a target="_blank"
+                      href="http://vem2017.ufu.br/artigos/Uchoa_et_al_2017.pdf">Do
+    Coupling Metrics Help Characterize Critical Components in
+    Component-based SPL? An Empirical Study.</a> 5th Workshop on Software
+    Visualization, Evolution and Maintenance (VEM), p. 36-43, 2017.
+  </p>
+
+  <p class="text-justify">
+    <strong>[8]</strong> Michele Lanza and Radu Marinescu (2006). <a
+          target="_blank"
+          href="https://www.csie.ntu.edu.tw/~r95004/Refactoring_improving_the_design_of_existing_code.pdf">Object-oriented
+    metrics in practice.</a> Springer Science & Business Media 2006.
+  </p>
+
+
+  <p class="text-justify">
+    <strong>[9]</strong> Martin Fowler and Kent Beck (1999). <a
+          target="_blank"
+          href="https://www.csie.ntu.edu.tw/~r95004/Refactoring_improving_the_design_of_existing_code.pdf">Refactoring:
+    improving the design of existing code.</a> Addison-Wesley Professional,
+    1999.
+  </p>
+
+
+  <p class="text-justify">
+    <strong>[10]</strong> Mattheus Munro (2005). <a target="_blank"
+                                                    href="https://ieeexplore.ieee.org/document/1509293/">Product
+    metrics for automatic identification of" bad smell" design problems
+    in java source-code,</a> 11th IEEE International Symposium on Software
+    Metrics (METRICS), p. 15, 2005.
+  </p>
+
+  <p class="text-justify">
+    <strong>[11]</strong> Radu Marinescu (2004). <a target="_blank"
+                                                    href="https://ieeexplore.ieee.org/document/1357820/">Detection
+    strategies: Metrics-based rules for detecting design flaws.</a> 20th
+    IEEE International Conference on Software Maintenance (ICSM), p.
+    350-359, 2004.
+  </p>
+
+</div>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async
+        src="https://www.googletagmanager.com/gtag/js?id=UA-103030276-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+
+  gtag('config', 'UA-103030276-3');
+</script>
+
+
+</body>
+</html>
+
